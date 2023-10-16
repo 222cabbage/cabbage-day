@@ -1,16 +1,30 @@
-import Home from '../views/home';
-import Login from '../views/login'
+/*
+ * @Auther: qinzhenhao
+ * @Date: 2023-10-16 13:46:52
+ * @LastEditors: qinzhenhao
+ * @LastEditTime: 2023-10-16 16:04:56
+ * @Description: 
+ */
+import React from "react";
+
+const Layout = React.lazy(()=> import(/* webpackChunkName: "Home" */ "../views/layout"))
+const LoginPage = React.lazy(()=> import(/* webpackChunkName: "Home" */ "../views/login"))
 
 const routers = [
   {
     title: '首页',
     path: '/',
-    component: Home,
+    component: Layout,
   },
   {
-    title: '关于',
+    title: '首页',
+    path: '/home/*',
+    component: Layout,
+  },
+  {
+    title: '登录',
     path: '/login',
-    component: Login,
+    component: LoginPage,
   },
 ];
 
