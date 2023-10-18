@@ -20,7 +20,7 @@ import { Layout, Menu, Button, theme } from 'antd';
 const { Header, Sider, Content } = Layout;
 import { useNavigate } from 'react-router-dom';
 import LowCode from '../low-code';
-import DateManager from '../date-manageer';
+import DateManager from '../date-manager';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const LayoutContainer = () => {
@@ -41,11 +41,7 @@ const LayoutContainer = () => {
                     mode="inline"
                     defaultSelectedKeys={['1']}
                     onClick={(e) => {
-                        console.log(e)
                         navigate(e.key)
-                    }}
-                    onSelect={(e) => {
-                        console.log(e)
                     }}
                     items={[
                         {

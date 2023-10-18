@@ -2,15 +2,16 @@
  * @Auther: qinzhenhao
  * @Date: 2023-10-16 15:38:38
  * @LastEditors: qinzhenhao
- * @LastEditTime: 2023-10-16 16:46:16
+ * @LastEditTime: 2023-10-18 17:56:08
  * @Description: 
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Dayjs } from 'dayjs';
 import type { BadgeProps, CalendarProps } from 'antd';
-import { Badge, Calendar } from 'antd';
+import { Badge, Calendar, Modal } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
+import { storageGet } from '../../common/localUtils';
 dayjs.locale('zh-cn');
 
 const getListData = (value: Dayjs) => {
@@ -51,6 +52,7 @@ const getMonthData = (value: Dayjs) => {
 };
 
 const DateManager = () => {
+
     const monthCellRender = (value: Dayjs) => {
         const num = getMonthData(value);
         return num ? (
@@ -75,14 +77,43 @@ const DateManager = () => {
     };
 
     const cellRender: CalendarProps<Dayjs>['cellRender'] = (current, info) => {
-        if (info.type === 'date') return dateCellRender(current);
-        if (info.type === 'month') return monthCellRender(current);
+        if (info.type === 'date') return dateCellRender(current); // 天
+        if (info.type === 'month') return monthCellRender(current); // 月
         return info.originNode;
     };
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    const [things, setThings] = useState([])
+
     return (
         <div>
-            <Calendar cellRender={cellRender} />
+            <Calendar cellRender={cellRender} onSelect={(date, info)=>{
+                // date.format('YYYY-HH-DD')
+                const data = storageGet('moon') // 获取本地缓存的数据
+                if(data){
+
+                }else{
+                    
+                }
+            }}/>
+            <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Modal>
         </div>
     )
 }
