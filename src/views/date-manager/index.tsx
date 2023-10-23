@@ -1,48 +1,24 @@
-/*
- * @Auther: qinzhenhao
- * @Date: 2023-10-16 15:38:38
- * @LastEditors: qinzhenhao
- * @LastEditTime: 2023-10-18 17:56:08
- * @Description: 
- */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import type { Dayjs } from 'dayjs';
 import type { BadgeProps, CalendarProps } from 'antd';
-import { Badge, Calendar, Modal } from 'antd';
+import { Badge, Calendar, Modal, Space, Input, Button, Row, Col, message, Card, Tag } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
-import { storageGet } from '../../common/localUtils';
+import {
+    ClockCircleOutlined,
+    GlobalOutlined,
+    PlusOutlined,
+    CloseCircleOutlined
+} from '@ant-design/icons';
+import CaEmpty from '../../components/CaEmpty'
+import CaIconFont from '../../components/CaIconFont'
+import { storageGet, storageSet } from '../../common/localUtils';
+import { envir } from '../../config';
+import Style from './index.module.scss'
 dayjs.locale('zh-cn');
 
-const getListData = (value: Dayjs) => {
-    let listData;
-    switch (value.date()) {
-        case 8:
-            listData = [
-                { type: 'warning', content: '火灾' },
-                { type: 'success', content: 'This is usual event.' },
-            ];
-            break;
-        case 10:
-            listData = [
-                { type: 'warning', content: 'This is warning event.' },
-                { type: 'success', content: 'This is usual event.' },
-                { type: 'error', content: 'This is error event.' },
-            ];
-            break;
-        case 15:
-            listData = [
-                { type: 'warning', content: 'This is warning event' },
-                { type: 'success', content: 'This is very long usual event......' },
-                { type: 'error', content: 'This is error event 1.' },
-                { type: 'error', content: 'This is error event 2.' },
-                { type: 'error', content: 'This is error event 3.' },
-                { type: 'error', content: 'This is error event 4.' },
-            ];
-            break;
-        default:
-    }
-    return listData || [];
+const getListData = (value: Dayjs, todos, selectTime) => {
+    return todos[value.format(envir.formatDate)] || [];
 };
 
 const getMonthData = (value: Dayjs) => {
@@ -64,11 +40,11 @@ const DateManager = () => {
     };
 
     const dateCellRender = (value: Dayjs) => {
-        const listData = getListData(value);
+        const listData = getListData(value, toDos, selectTime);
         return (
             <ul className="events">
-                {listData.map((item) => (
-                    <li key={item.content}>
+                {listData.length > 0 && listData.map((item, index) => (
+                    <li key={index}>
                         <Badge status={item.type as BadgeProps['status']} text={item.content} />
                     </li>
                 ))}
@@ -90,29 +66,120 @@ const DateManager = () => {
 
     const handleOk = () => {
         setIsModalOpen(false);
+        storageGet(selectTime, [])
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
     };
 
+    const [toDos, setToDos] = useState({})
+    const [selectTime, setSelectTime] = useState('')
     const [things, setThings] = useState([])
+    const [value, setValue] = useState('')
+
+    useEffect(() => {
+        const data = storageGet(envir.localKey) // 获取本地缓存的数据
+        if (data) {
+            setToDos(data)
+        } else {
+            setToDos({})
+            storageSet(envir.localKey, {})
+        }
+    }, [])
+
+    const title = (title, icon) => {
+        return <div className={Style['card_title']}>
+            <Space>
+                <>{icon}</>
+                <>{title}</>
+            </Space>
+        </div>
+    }
+
+    const log = (e: React.MouseEvent<HTMLElement>) => {
+        console.log(e);
+      };
 
     return (
-        <div>
-            <Calendar cellRender={cellRender} onSelect={(date, info)=>{
-                // date.format('YYYY-HH-DD')
-                const data = storageGet('moon') // 获取本地缓存的数据
-                if(data){
-
-                }else{
-                    
+        <div style={{ display: 'flex', height: "100%" }}>
+            <div style={{ flex: 1, marginRight: '10px' }}>
+                <Card title={title('当日计划', <CaIconFont type='icon-dingzhi' style={{ fontSize: '20px' }} />)} style={{ height: '100%' }} extra={<Button
+                    icon={<PlusOutlined />}
+                    type='primary'
+                    onClick={() => {
+                        showModal()
+                    }}>
+                    添加
+                </Button>}>
+                    {
+                        toDos[selectTime] ? <dl>
+                            {
+                                toDos[selectTime] && toDos[selectTime].length > 0 && toDos[selectTime].map((item, index) => (
+                                    <li key={index}>
+                                        <Badge key={index} status={item.type as BadgeProps['status']} text={item.content} />
+                                    </li>
+                                ))
+                            }
+                        </dl> : <CaEmpty description='暂无计划' />
+                    }
+                </Card>
+            </div>
+            <div style={{ flex: 2, height: '100%' }}>
+                <Card title={title('全部计划', <CaIconFont type='icon-bianji' style={{ fontSize: '20px' }} />)} style={{ height: '100%', overflowY: 'scroll' }}>
+                    <Calendar cellRender={cellRender} onSelect={(date, info) => {
+                        if (info.source == 'date') {
+                            setSelectTime(date.format(envir.formatDate))
+                        }
+                    }} />
+                </Card>
+            </div>
+            <Modal centered title={selectTime} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                {
+                    toDos[selectTime] ? <dl>
+                        {
+                            toDos[selectTime] && toDos[selectTime].length > 0 && toDos[selectTime].map((item, index) => (
+                                <li key={index}>
+                                    <Badge status={item.type as BadgeProps['status']} text={item.content} />
+                                </li>
+                            ))
+                        }
+                    </dl> : <div>暂无计划</div>
                 }
-            }}/>
-            <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+                <Row gutter={[16, 16]}>
+                    <Col span={88}>
+                        <Input placeholder="你想做什么！" value={value} onChange={(inputValue) => {
+                            setValue(inputValue.target.value)
+                        }} />
+                    </Col>
+                    <Col span={8}>
+                        <Button type="primary" onClick={() => {
+
+                            if (value == '') {
+                                message.info({
+                                    type: 'error',
+                                    content: '计划不能为空欧',
+                                });
+                                return
+                            }
+
+                            let dos = { ...toDos }
+
+                            if (dos[selectTime]) {
+                                dos[selectTime] = [...dos[selectTime], { type: 'success', content: value }]
+                            } else {
+                                dos[selectTime] = [{ type: 'success', content: value }]
+                            }
+
+                            setToDos(dos)
+
+                            storageSet(envir.localKey, dos)
+
+                            setValue('')
+
+                        }}>添加</Button>
+                    </Col>
+                </Row>
             </Modal>
         </div>
     )
