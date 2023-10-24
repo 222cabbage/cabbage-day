@@ -95,7 +95,7 @@ const LayoutContainer = () => {
                         <Route exact path="/datemanager" element={<DateManager />} />
                         <Route exact path="/smallstore" element={<SmallStore />} />
                         <Route exact path="/lowcode" element={<LowCode />} />
-                        <Route exact path="*" element={<DateManager />} />
+                        <Route exact path="*" element={<Statistics />} />
                     </Routes>
                 </Content>
             </Layout>
