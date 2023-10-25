@@ -2,7 +2,7 @@
  * @Auther: qinzhenhao
  * @Date: 2023-10-13 17:36:58
  * @LastEditors: qinzhenhao
- * @LastEditTime: 2023-10-23 17:56:59
+ * @LastEditTime: 2023-10-25 10:40:08
  * @Description: 
  */
 
@@ -15,6 +15,10 @@ import {
     CalendarOutlined,
     VideoCameraOutlined,
     BulbOutlined,
+    RedditOutlined,
+    CustomerServiceOutlined,
+    DesktopOutlined,
+    LikeOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme } from 'antd';
 const { Header, Sider, Content } = Layout;
@@ -24,6 +28,8 @@ import DateManager from '../date-manager';
 import LowCode from '../low-code';
 import SmallStore from '../smallStore';
 import Statistics from '../statistics';
+import SocketPage from '../socketPage';
+import Virtue from '../virtue';
 
 const LayoutContainer = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -48,8 +54,13 @@ const LayoutContainer = () => {
                     items={[
                         {
                             key: '/home/statistics',
-                            icon: <CalendarOutlined />,
+                            icon: <DesktopOutlined />,
                             label: '工作台',
+                        },
+                        {
+                            key: '/home/virtue',
+                            icon: <LikeOutlined />,
+                            label: '功德台(电子木鱼)',
                         },
                         {
                             key: '/home/datemanager',
@@ -58,13 +69,18 @@ const LayoutContainer = () => {
                         },
                         {
                             key: '/home/smallstore',
-                            icon: <BulbOutlined />,
+                            icon: <CustomerServiceOutlined />,
                             label: '我的小店',
                         },
                         {
                             key: '/home/lowcode',
                             icon: <BulbOutlined />,
                             label: '随便画画',
+                        },
+                        {
+                            key: '/home/socketpage',
+                            icon: <RedditOutlined />,
+                            label: '聊聊',
                         },
                     ]}
                 />
@@ -95,6 +111,8 @@ const LayoutContainer = () => {
                         <Route exact path="/datemanager" element={<DateManager />} />
                         <Route exact path="/smallstore" element={<SmallStore />} />
                         <Route exact path="/lowcode" element={<LowCode />} />
+                        <Route exact path="/socketpage" element={<SocketPage />} />
+                        <Route exact path="/virtue" element={<Virtue />} />
                         <Route exact path="*" element={<Statistics />} />
                     </Routes>
                 </Content>

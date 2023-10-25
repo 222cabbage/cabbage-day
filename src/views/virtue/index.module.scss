@@ -1,0 +1,16 @@
+.imgBox {
+    width: 400px;
+    height: 400px;
+    background-image: url(../../assets/images/电子木鱼2.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    &:active {
+        transform: scale(0.6);
+        transition: all 0.1s;
+    }
+}
+.container {
+    width: 400px;
+    height: 400px;
+}
+

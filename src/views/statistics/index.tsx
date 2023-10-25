@@ -2,7 +2,7 @@
  * @Auther: qinzhenhao
  * @Date: 2023-10-23 17:51:24
  * @LastEditors: qinzhenhao
- * @LastEditTime: 2023-10-24 11:10:56
+ * @LastEditTime: 2023-10-25 09:33:50
  * @Description: 
  */
 import React from 'react'
@@ -22,7 +22,9 @@ const Statistics = () => {
             <div style={{ width: '50%', height: '50%' }}>
                 <ChartMap></ChartMap>
             </div>
-            <div style={{ width: '50%', height: '50%' }}>123</div>
+            <div style={{ width: '50%', height: '50%' }}>
+                123
+            </div>
         </div>
     )
 }

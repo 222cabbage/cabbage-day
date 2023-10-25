@@ -10,7 +10,7 @@ import { createFromIconfontCN } from '@ant-design/icons';
 import ReactDOM from 'react-dom/client';
 
 const MyIcon = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/c/font_3903637_95xacdjpg0k.js', // 在 iconfont.cn 上生成
+  scriptUrl: '//at.alicdn.com/t/c/font_3903637_jznud79x7sc.js', // 在 iconfont.cn 上生成
 });
 
 export default MyIcon
